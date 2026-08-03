@@ -1,0 +1,27 @@
+{
+  "name": "tree-sitter-sapvc",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the SAP Variant Configuration (LO-VC/AVC) dependency language",
+  "license": "MIT",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "parse": "tree-sitter parse",
+    "highlight": "tree-sitter highlight",
+    "test": "tree-sitter test"
+  },
+  "keywords": ["sap", "variant-configuration", "avc", "lo-vc", "tree-sitter", "parser"],
+  "files": ["grammar.js", "src", "queries", "bindings"],
+  "tree-sitter": [
+    {
+      "scope": "source.sapvc",
+      "file-types": ["sapvc"],
+      "highlights": ["queries/highlights.scm"],
+      "injection-regex": "sapvc"
+    }
+  ],
+  "devDependencies": {
+    "tree-sitter-cli": "^0.25.0"
+  }
+}

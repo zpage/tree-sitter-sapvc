@@ -1,0 +1,773 @@
+[
+  {
+    "type": "assignment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "object_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "bare_ref",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bare_ref",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "comment",
+    "named": true,
+    "extra": true,
+    "fields": {}
+  },
+  {
+    "type": "condition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "condition_term",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "condition_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "condition_term",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "call",
+          "named": true
+        },
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "condition_term",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "in_item",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_assignment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "object_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "condition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "in_item",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "inferences_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "if_clause",
+          "named": true
+        },
+        {
+          "type": "restriction_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "is_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "object_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "keyword_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "named_argument",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "named_argument",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "object_ref",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "object_ref",
+          "named": true
+        },
+        {
+          "type": "object_var",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "objects_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "object_decl",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "paren_group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "condition",
+          "named": true
+        },
+        {
+          "type": "conditional_assignment",
+          "named": true
+        },
+        {
+          "type": "is_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "bare_ref",
+          "named": true
+        },
+        {
+          "type": "object_ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "restriction_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bare_ref",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "restrictions_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "if_clause",
+          "named": true
+        },
+        {
+          "type": "restriction_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "condition_section",
+          "named": true
+        },
+        {
+          "type": "if_clause",
+          "named": true
+        },
+        {
+          "type": "inferences_section",
+          "named": true
+        },
+        {
+          "type": "objects_section",
+          "named": true
+        },
+        {
+          "type": "restrictions_section",
+          "named": true
+        },
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "assignment",
+          "named": true
+        },
+        {
+          "type": "conditional_assignment",
+          "named": true
+        },
+        {
+          "type": "is_statement",
+          "named": true
+        },
+        {
+          "type": "keyword_call",
+          "named": true
+        },
+        {
+          "type": "paren_group",
+          "named": true
+        },
+        {
+          "type": "system_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "string",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "system_call",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "object_ref",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "call",
+          "named": true
+        },
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "keyword_call",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "reference",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "'",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "*",
+    "named": false
+  },
+  {
+    "type": "+",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": "-",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": "/",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": "<",
+    "named": false
+  },
+  {
+    "type": "<=",
+    "named": false
+  },
+  {
+    "type": "<>",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": ">",
+    "named": false
+  },
+  {
+    "type": ">=",
+    "named": false
+  },
+  {
+    "type": "?=",
+    "named": false
+  },
+  {
+    "type": "AND",
+    "named": false
+  },
+  {
+    "type": "CONDITION",
+    "named": false
+  },
+  {
+    "type": "FUNCTION",
+    "named": false
+  },
+  {
+    "type": "HIDDEN",
+    "named": false
+  },
+  {
+    "type": "IF",
+    "named": false
+  },
+  {
+    "type": "IN",
+    "named": false
+  },
+  {
+    "type": "INFERENCES",
+    "named": false
+  },
+  {
+    "type": "INVISIBLE",
+    "named": false
+  },
+  {
+    "type": "IS",
+    "named": false
+  },
+  {
+    "type": "IS_A",
+    "named": false
+  },
+  {
+    "type": "NOT",
+    "named": false
+  },
+  {
+    "type": "OBJECTS",
+    "named": false
+  },
+  {
+    "type": "OPTIONAL",
+    "named": false
+  },
+  {
+    "type": "OR",
+    "named": false
+  },
+  {
+    "type": "PFUNCTION",
+    "named": false
+  },
+  {
+    "type": "REQUIRED",
+    "named": false
+  },
+  {
+    "type": "RESTRICTIONS",
+    "named": false
+  },
+  {
+    "type": "SPECIFIED",
+    "named": false
+  },
+  {
+    "type": "TABLE",
+    "named": false
+  },
+  {
+    "type": "VISIBLE",
+    "named": false
+  },
+  {
+    "type": "WHERE",
+    "named": false
+  },
+  {
+    "type": "and",
+    "named": false
+  },
+  {
+    "type": "function",
+    "named": false
+  },
+  {
+    "type": "hidden",
+    "named": false
+  },
+  {
+    "type": "identifier",
+    "named": true
+  },
+  {
+    "type": "if",
+    "named": false
+  },
+  {
+    "type": "in",
+    "named": false
+  },
+  {
+    "type": "invisible",
+    "named": false
+  },
+  {
+    "type": "is",
+    "named": false
+  },
+  {
+    "type": "not",
+    "named": false
+  },
+  {
+    "type": "number",
+    "named": true
+  },
+  {
+    "type": "object_var",
+    "named": true
+  },
+  {
+    "type": "optional",
+    "named": false
+  },
+  {
+    "type": "or",
+    "named": false
+  },
+  {
+    "type": "pfunction",
+    "named": false
+  },
+  {
+    "type": "required",
+    "named": false
+  },
+  {
+    "type": "specified",
+    "named": false
+  },
+  {
+    "type": "table",
+    "named": false
+  },
+  {
+    "type": "visible",
+    "named": false
+  },
+  {
+    "type": "where",
+    "named": false
+  },
+  {
+    "type": "||",
+    "named": false
+  }
+]
