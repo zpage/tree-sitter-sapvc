@@ -63,7 +63,11 @@ module.exports = grammar({
 
     // $DEL_DEFAULT ($SELF,TXT_ELE_VENDOR,$SELF.TXT_ELE_VENDOR)  [V]
     system_call: $ => seq(
-      /\$(?:SET_DEFAULT|DEL_DEFAULT|SET_PRICING_FACTOR|COUNT_PARTS|SUM_PARTS)/i,
+      // literal tokens (not regex) so highlights.scm can target them;
+      // corpus has $DEL_DEFAULT x197, other verbs from the UDL Keywords1
+      choice('$SET_DEFAULT', '$set_default', '$DEL_DEFAULT', '$del_default',
+             '$SET_PRICING_FACTOR', '$set_pricing_factor', '$COUNT_PARTS', '$count_parts',
+             '$SUM_PARTS', '$sum_parts'),
       '(', $.object_ref, ',', $.identifier, ',', $.value, ')'
     ),
 

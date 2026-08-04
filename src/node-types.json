@@ -539,6 +539,46 @@
     }
   },
   {
+    "type": "$COUNT_PARTS",
+    "named": false
+  },
+  {
+    "type": "$DEL_DEFAULT",
+    "named": false
+  },
+  {
+    "type": "$SET_DEFAULT",
+    "named": false
+  },
+  {
+    "type": "$SET_PRICING_FACTOR",
+    "named": false
+  },
+  {
+    "type": "$SUM_PARTS",
+    "named": false
+  },
+  {
+    "type": "$count_parts",
+    "named": false
+  },
+  {
+    "type": "$del_default",
+    "named": false
+  },
+  {
+    "type": "$set_default",
+    "named": false
+  },
+  {
+    "type": "$set_pricing_factor",
+    "named": false
+  },
+  {
+    "type": "$sum_parts",
+    "named": false
+  },
+  {
     "type": "'",
     "named": false
   },

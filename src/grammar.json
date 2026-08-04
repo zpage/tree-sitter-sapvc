@@ -157,9 +157,49 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "PATTERN",
-          "value": "\\$(?:SET_DEFAULT|DEL_DEFAULT|SET_PRICING_FACTOR|COUNT_PARTS|SUM_PARTS)",
-          "flags": "i"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "$SET_DEFAULT"
+            },
+            {
+              "type": "STRING",
+              "value": "$set_default"
+            },
+            {
+              "type": "STRING",
+              "value": "$DEL_DEFAULT"
+            },
+            {
+              "type": "STRING",
+              "value": "$del_default"
+            },
+            {
+              "type": "STRING",
+              "value": "$SET_PRICING_FACTOR"
+            },
+            {
+              "type": "STRING",
+              "value": "$set_pricing_factor"
+            },
+            {
+              "type": "STRING",
+              "value": "$COUNT_PARTS"
+            },
+            {
+              "type": "STRING",
+              "value": "$count_parts"
+            },
+            {
+              "type": "STRING",
+              "value": "$SUM_PARTS"
+            },
+            {
+              "type": "STRING",
+              "value": "$sum_parts"
+            }
+          ]
         },
         {
           "type": "STRING",
