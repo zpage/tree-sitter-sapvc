@@ -181,7 +181,10 @@ module.exports = grammar({
     // Arithmetic / concatenation expression (RHS of assignments) [V]
     expression: $ => prec.left(seq(
       $.value,
-      repeat(seq(choice('||', '+', '-', '*', '/'), $.value))
+      // '**' exponentiation added from the author's VCE template library
+      // (2026-01-05, `$self.POWER = $self.TORQUE * $self.SPEED ** 2`);
+      // not observed in the 21-file corpus but documented VC syntax [T]
+      repeat(seq(choice('||', '+', '-', '*', '/', '**'), $.value))
     )),
 
     value: $ => choice(
