@@ -57,9 +57,8 @@
     }
   },
   {
-    "type": "comment",
+    "type": "comment_statement",
     "named": true,
-    "extra": true,
     "fields": {}
   },
   {
@@ -200,6 +199,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment_statement",
+          "named": true
+        },
+        {
           "type": "if_clause",
           "named": true
         },
@@ -314,6 +317,10 @@
       "required": false,
       "types": [
         {
+          "type": "comment_statement",
+          "named": true
+        },
+        {
           "type": "object_decl",
           "named": true
         },
@@ -414,6 +421,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment_statement",
+          "named": true
+        },
+        {
           "type": "if_clause",
           "named": true
         },
@@ -433,6 +444,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "comment_statement",
+          "named": true
+        },
         {
           "type": "condition_section",
           "named": true

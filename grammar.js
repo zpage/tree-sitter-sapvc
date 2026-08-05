@@ -20,7 +20,7 @@
 module.exports = grammar({
   name: 'sapvc',
 
-  extras: $ => [/\s/, $.comment],
+  extras: $ => [/\\s/],
 
   word: $ => $.identifier,
 
@@ -32,6 +32,7 @@ module.exports = grammar({
   rules: {
     source_file: $ => repeat(choice(
       seq($.statement, optional(choice(',', ';'))),   // statements may carry a trailing comma [V]
+      $.comment_statement,
       $.if_clause,
       $.objects_section,
       $.condition_section,
@@ -119,7 +120,7 @@ module.exports = grammar({
       // object_decl carries its own optional ','; a bare where on an object
       // declaration is followed by THAT object's restriction statements
       // inline inside OBJECTS (constraint corpus: '(300)CLS where' then C_V2 = ...;)
-      repeat(choice($.object_decl, $.restriction_statement))
+      repeat(choice($.object_decl, $.restriction_statement, $.comment_statement))
     ),
     object_decl: $ => choice(
       seq(
@@ -144,8 +145,8 @@ module.exports = grammar({
     // interleaved [V]. prec.RIGHT: after section content, an IF/statement
     // SHIFTS to continue the section (prec.left would reduce = end the
     // section, breaking restriction-after-IF sequences).
-    restrictions_section: $ => seq(choice('RESTRICTIONS', 'Restrictions', 'restrictions'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
-    inferences_section: $ => seq(choice('INFERENCES', 'Inferences', 'inferences'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
+    restrictions_section: $ => seq(choice('RESTRICTIONS', 'Restrictions', 'restrictions'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause, $.comment_statement)))),
+    inferences_section: $ => seq(choice('INFERENCES', 'Inferences', 'inferences'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause, $.comment_statement)))),
 
     restriction_statement: $ => choice(
       seq($.bare_ref, '=', $.expression, optional(choice(',', ';'))),
@@ -256,8 +257,8 @@ module.exports = grammar({
     number: $ => /-?\d+(?:\.\d+)?/,
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
-    // Whole-line comment; matches longest against the '*' operator, so a
-    // comment always wins in extras (see KNOWN LIMITATION at the top).
-    comment: $ => seq('*', /[^\r\n]*/)
+    // Line-start comment: '*' as first non-space char of a line.
+    // (multiplication '*' is matched only in non-line-start positions)
+    comment_statement: $ => seq('*', /[^\r\n]*/)
   }
 });
