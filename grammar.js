@@ -182,6 +182,9 @@ module.exports = grammar({
     ),
 
     // Arithmetic / concatenation expression (RHS of assignments) [V]
+    // NOTE: unary minus (`?= -50`) is NOT supported — attempts to add it
+    // (leading-operand or value-level prec) break multi-line `.../2-\n$SELF...`
+    // chains via GLR forks. Rare in corpus (1-2 occurrences); LSP filters it.
     expression: $ => prec.left(seq(
       $.value,
       // '**' exponentiation added from the author's VCE template library
@@ -192,6 +195,9 @@ module.exports = grammar({
 
     value: $ => choice(
       $.reference,
+      // MDATA <char>: material-data reference in variant function args
+      // (e.g. `SAP_VF_CHARIN = MDATA $self.TXT_MATNR`) [constraint corpus]
+      seq(choice('MDATA', 'mdata'), $.reference),
       $.string,
       $.number,
       $.keyword_call,                 // TABLE/FUNCTION/PFUNCTION calls in conditions [V]

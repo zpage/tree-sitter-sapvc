@@ -1183,6 +1183,28 @@
           "name": "reference"
         },
         {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "MDATA"
+                },
+                {
+                  "type": "STRING",
+                  "value": "mdata"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "reference"
+            }
+          ]
+        },
+        {
           "type": "SYMBOL",
           "name": "string"
         },
