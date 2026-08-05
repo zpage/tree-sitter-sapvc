@@ -27,11 +27,11 @@ module.exports = grammar({
   // '(' inside a paren_group can start an assignment or a condition
   // comparison; the next token (',' vs 'AND'/'OR') decides, so GLR forks
   // between the assignment and reference interpretations.
-  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term], [$.object_decl]],
+  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term], [$.object_decl], [$.objects_section]],
 
   rules: {
     source_file: $ => repeat(choice(
-      seq($.statement, optional(',')),   // statements may carry a trailing comma [V]
+      seq($.statement, optional(choice(',', ';'))),   // statements may carry a trailing comma [V]
       $.if_clause,
       $.objects_section,
       $.condition_section,
@@ -50,8 +50,9 @@ module.exports = grammar({
     ),
 
     // $SELF.X ?= 'VER_02'   (conditional value assignment, 251x in sample)
+    // RHS allows unary '-' prefix: `?=-(20+(...))` (corpus-observed)
     conditional_assignment: $ => seq(
-      $.object_ref, '?=', $.expression
+      $.object_ref, '?=', prec(3, seq(optional('-'), $.expression))
     ),
 
     // $SELF.POS_S_COP is invisible | <ref> IS INVISIBLE  (case-insensitive) [V]
@@ -89,7 +90,7 @@ module.exports = grammar({
     //   ( $SELF.A = 'BX' AND $SELF.B = 'B' OR $SELF.A = 'CX' AND ... )   [V]
     paren_group: $ => seq(
       '(',
-      repeat(seq(choice($.assignment, $.conditional_assignment, $.is_statement, $.condition), optional(','))),
+      repeat(seq(choice($.assignment, $.conditional_assignment, $.is_statement, $.condition), optional(choice(',', ';')))),
       ')'
     ),
 
@@ -115,14 +116,27 @@ module.exports = grammar({
     // ET2 IS_A(300) ETOPARAMETERGROUP where Remark = TXT_NON_STD_REMARK
     objects_section: $ => seq(
       choice('OBJECTS', 'Objects', 'objects'), ':',
-      repeat($.object_decl)   // object_decl carries its own optional ','
+      // object_decl carries its own optional ','; a bare `where` on an
+      // object declaration is followed by THAT object's restriction
+      // statements inline (constraint corpus: `(300)CLS where
+C_V2 = ...;`)
+      repeat(choice($.object_decl, $.restriction_statement))
     ),
-    object_decl: $ => seq(
-      $.identifier, 'IS_A', '(', $.number, ')', $.identifier,
-      optional(seq(choice('where', 'WHERE'), $.identifier, '=', $.identifier)),
-      // trailing comma is OPTIONAL: real corpus has both `...,` and bare
-      // line-end after the class name (e.g. NET_CN_ENTA_VILLA.sapvc)
-      optional(',')
+    object_decl: $ => choice(
+      seq(
+        $.identifier, 'IS_A', '(', $.number, ')', $.identifier,
+        optional(seq(choice('where', 'WHERE'), optional(seq($.identifier, '=', $.identifier)))),
+        // trailing comma is OPTIONAL: real corpus has both `...,` and bare
+        // line-end after the class name (e.g. NET_CN_ENTA_VILLA.sapvc)
+        optional(choice(',', ';'))
+      ),
+      // `(300)CN_ELEV_ENG_M where TM = TYP_TM,` — object declared by class
+      // number + class name, no separate object identifier (cons corpus)
+      seq(
+        '(', $.number, ')', $.identifier,
+        optional(seq(choice('where', 'WHERE'), optional(seq($.identifier, '=', $.identifier)))),
+        optional(choice(',', ';'))
+      )
     ),
 
     condition_section: $ => seq(choice('CONDITION', 'Condition', 'condition'), ':', $.condition),
@@ -135,12 +149,12 @@ module.exports = grammar({
     inferences_section: $ => seq(choice('INFERENCES', 'Inferences', 'inferences'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
 
     restriction_statement: $ => choice(
-      seq($.bare_ref, '=', $.expression, optional(',')),
-      seq($.bare_ref, '?=', $.expression, optional(',')),
+      seq($.bare_ref, '=', $.expression, optional(choice(',', ';'))),
+      seq($.bare_ref, '?=', $.expression, optional(choice(',', ';'))),
       // object-ref assignment: `ET1.DIM_CWF_H = SPB.DIM_CWF_H` in
       // RESTRICTIONS (constraint corpus)
-      seq($.object_ref, '=', $.expression, optional(',')),
-      seq($.object_ref, '?=', $.expression, optional(',')),
+      seq($.object_ref, '=', $.expression, optional(choice(',', ';'))),
+      seq($.object_ref, '?=', $.expression, optional(choice(',', ';'))),
       // TABLE/FUNCTION/system calls and is-statements also appear in
       // RESTRICTIONS/INFERENCES. NOTE: NOT `$.statement` — its assignment arm
       // GLR-forks against the bare_ref/object_ref arms above.
