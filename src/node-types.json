@@ -237,6 +237,10 @@
       "required": true,
       "types": [
         {
+          "type": "comment_statement",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -399,6 +403,10 @@
         },
         {
           "type": "keyword_call",
+          "named": true
+        },
+        {
+          "type": "number",
           "named": true
         },
         {

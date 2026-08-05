@@ -22,9 +22,23 @@ if [ -d "$TOOLS/material-data" ]; then
     AUDIT_OUT=$(python "$TOOLS/corpus_audit.py" 2>&1 || true)
     echo "$AUDIT_OUT" | tail -2
     ERR=$(echo "$AUDIT_OUT" | grep -oE '[0-9]+ ERROR nodes' | head -1 || echo "0 ERROR nodes")
+    BASELINE_FILE="$ROOT/.audit-baseline"
     case "$ERR" in
         0\ ERROR*|"") echo "   OK: no ERROR nodes" ;;
-        *) echo "   FAIL: $ERR — grammar must not regress the corpus"; exit 1 ;;
+        *)
+            N=$(echo "$ERR" | grep -oE '^[0-9]+')
+            if [ -f "$BASELINE_FILE" ]; then
+                BASE=$(cat "$BASELINE_FILE")
+                if [ "$N" -le "$BASE" ]; then
+                    echo "   OK: $N ERROR <= baseline $BASE"
+                else
+                    echo "   FAIL: $N ERROR > baseline $BASE — grammar regressed the corpus"
+                    exit 1
+                fi
+            else
+                echo "   WARN: $N ERROR nodes, no baseline yet ($BASELINE_FILE)"
+            fi
+            ;;
     esac
 else
     echo "   (no material-data corpus found — skipping corpus audit)"

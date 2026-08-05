@@ -20,14 +20,14 @@
 module.exports = grammar({
   name: 'sapvc',
 
-  extras: $ => [/\\s/],
+  extras: $ => [/\s/],
 
   word: $ => $.identifier,
 
   // '(' inside a paren_group can start an assignment or a condition
   // comparison; the next token (',' vs 'AND'/'OR') decides, so GLR forks
   // between the assignment and reference interpretations.
-  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term], [$.object_decl], [$.objects_section]],
+  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term], [$.object_decl], [$.objects_section], [$.restriction_statement], [$.keyword_call], [$.restriction_statement, $.value]],
 
   rules: {
     source_file: $ => repeat(choice(
@@ -70,7 +70,11 @@ module.exports = grammar({
       choice('$SET_DEFAULT', '$set_default', '$DEL_DEFAULT', '$del_default',
              '$SET_PRICING_FACTOR', '$set_pricing_factor', '$COUNT_PARTS', '$count_parts',
              '$SUM_PARTS', '$sum_parts'),
-      '(', $.object_ref, ',', $.identifier, ',', $.value, ')'
+      '(', $.object_ref, ',', $.identifier,
+      // third arg optional: `$DEL_DEFAULT($SELF, CHAR, $SELF.CHAR)` (3 args)
+      // and `$SET_DEFAULT($SELF, CHAR)` (2 args) both occur in production
+      optional(seq(',', $.value)),
+      ')'
     ),
 
     // TABLE TB_TM_GROOVE (WGT_CAR_TOTAL = $SELF.WGT_CAR_TOTAL, ...)   [V]
@@ -81,7 +85,13 @@ module.exports = grammar({
       choice('table', 'TABLE', 'function', 'FUNCTION', 'pfunction', 'PFUNCTION'),
       $.identifier,
       '(',
-      optional(seq($.named_argument, repeat(seq(',', $.named_argument)))),
+      // line-start comments (e.g. *INPUT* / *OUTPUT*) may appear between
+      // arguments: `TABLE TB_X (\n*INPUT*\nA = $SELF.B)` — user ruling:
+      // a line-start '*' is ALWAYS a comment, no exceptions.
+      repeat(choice(
+        $.comment_statement,
+        seq($.named_argument, optional(choice(',', ';')))
+      )),
       ')'
     ),
     named_argument: $ => seq($.identifier, choice('=', '?='), $.value),
@@ -117,9 +127,9 @@ module.exports = grammar({
     // ET2 IS_A(300) ETOPARAMETERGROUP where Remark = TXT_NON_STD_REMARK
     objects_section: $ => seq(
       choice('OBJECTS', 'Objects', 'objects'), ':',
-      // object_decl carries its own optional ','; a bare where on an object
-      // declaration is followed by THAT object's restriction statements
-      // inline inside OBJECTS (constraint corpus: '(300)CLS where' then C_V2 = ...;)
+      // object_decl carries its own optional ','; a bare `where` on an
+      // object declaration is followed by THAT object's restriction
+      // statements inline (constraint corpus: `(300)CLS where
       repeat(choice($.object_decl, $.restriction_statement, $.comment_statement))
     ),
     object_decl: $ => choice(
@@ -150,14 +160,17 @@ module.exports = grammar({
 
     restriction_statement: $ => choice(
       seq($.bare_ref, '=', $.expression, optional(choice(',', ';'))),
-      seq($.bare_ref, '?=', $.expression, optional(choice(',', ';'))),
+      seq($.bare_ref, '?=', prec(3, seq(optional('-'), $.expression)), optional(choice(',', ';'))),
       // object-ref assignment: `ET1.DIM_CWF_H = SPB.DIM_CWF_H` in
       // RESTRICTIONS (constraint corpus)
       seq($.object_ref, '=', $.expression, optional(choice(',', ';'))),
-      seq($.object_ref, '?=', $.expression, optional(choice(',', ';'))),
+      seq($.object_ref, '?=', prec(3, seq(optional('-'), $.expression)), optional(choice(',', ';'))),
       // TABLE/FUNCTION/system calls and is-statements also appear in
       // RESTRICTIONS/INFERENCES. NOTE: NOT `$.statement` — its assignment arm
       // GLR-forks against the bare_ref/object_ref arms above.
+      // bare comparisons in RESTRICTIONS: `$SELF.X >= 2026,` (cons)
+      seq(choice($.object_ref, $.bare_ref, $.number), choice('=', '<>', '<', '>', '<=', '>='),
+          prec(3, seq(optional('-'), $.expression)), optional(choice(',', ';'))),
       $.keyword_call,
       $.system_call,
       $.is_statement
@@ -258,7 +271,8 @@ module.exports = grammar({
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     // Line-start comment: '*' as first non-space char of a line.
-    // (multiplication '*' is matched only in non-line-start positions)
+    // ALWAYS a comment, never multiplication (user ruling).
+    // (multiplication '*' is matched only in mid-expression)
     comment_statement: $ => seq('*', /[^\r\n]*/)
   }
 });
