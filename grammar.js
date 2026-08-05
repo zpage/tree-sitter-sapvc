@@ -136,7 +136,17 @@ module.exports = grammar({
 
     restriction_statement: $ => choice(
       seq($.bare_ref, '=', $.expression, optional(',')),
-      seq($.bare_ref, '?=', $.expression, optional(','))
+      seq($.bare_ref, '?=', $.expression, optional(',')),
+      // object-ref assignment: `ET1.DIM_CWF_H = SPB.DIM_CWF_H` in
+      // RESTRICTIONS (constraint corpus)
+      seq($.object_ref, '=', $.expression, optional(',')),
+      seq($.object_ref, '?=', $.expression, optional(',')),
+      // TABLE/FUNCTION/system calls and is-statements also appear in
+      // RESTRICTIONS/INFERENCES. NOTE: NOT `$.statement` — its assignment arm
+      // GLR-forks against the bare_ref/object_ref arms above.
+      $.keyword_call,
+      $.system_call,
+      $.is_statement
     ),
 
     // ==================================================================
