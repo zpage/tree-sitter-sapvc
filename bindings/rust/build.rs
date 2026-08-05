@@ -2,13 +2,9 @@ use std::path::PathBuf;
 
 fn main() {
     let dir: PathBuf = std::env::var("CARGO_MANIFEST_DIR").unwrap().into();
-    let mut src = dir.join("../../src");
-    // Normalize .. components: cargo/cc watch and compile the literal path,
-    // and a `bindings
-ust\..\..\src` form misbehaves on Windows.
-    if let Ok(c) = std::fs::canonicalize(&src) {
-        src = c;
-    }
+    // Normalize .. components lexically (no filesystem access): canonicalize
+    // would add a \\?\ prefix that MinGW gcc cannot open.
+    let src = dir.join("../../src").components().collect::<PathBuf>();
     let mut c_config = cc::Build::new();
     c_config.include(&src);
     c_config.warnings(false);
