@@ -27,7 +27,7 @@ module.exports = grammar({
   // '(' inside a paren_group can start an assignment or a condition
   // comparison; the next token (',' vs 'AND'/'OR') decides, so GLR forks
   // between the assignment and reference interpretations.
-  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term]],
+  conflicts: $ => [[$.assignment, $.reference], [$.object_ref, $.reference], [$.bare_ref, $.reference], [$.call, $.reference], [$.condition_term], [$.object_decl]],
 
   rules: {
     source_file: $ => repeat(choice(
@@ -115,11 +115,14 @@ module.exports = grammar({
     // ET2 IS_A(300) ETOPARAMETERGROUP where Remark = TXT_NON_STD_REMARK
     objects_section: $ => seq(
       'OBJECTS', ':',
-      repeat(seq($.object_decl, optional(',')))
+      repeat($.object_decl)   // object_decl carries its own optional ','
     ),
     object_decl: $ => seq(
       $.identifier, 'IS_A', '(', $.number, ')', $.identifier,
-      optional(seq(choice('where', 'WHERE'), $.identifier, '=', $.identifier))
+      optional(seq(choice('where', 'WHERE'), $.identifier, '=', $.identifier)),
+      // trailing comma is OPTIONAL: real corpus has both `...,` and bare
+      // line-end after the class name (e.g. NET_CN_ENTA_VILLA.sapvc)
+      optional(',')
     ),
 
     condition_section: $ => seq('CONDITION', ':', $.condition),
