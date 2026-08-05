@@ -114,7 +114,7 @@ module.exports = grammar({
     // ET1 IS_A(300) ETOPARAMETERGROUP,
     // ET2 IS_A(300) ETOPARAMETERGROUP where Remark = TXT_NON_STD_REMARK
     objects_section: $ => seq(
-      'OBJECTS', ':',
+      choice('OBJECTS', 'Objects', 'objects'), ':',
       repeat($.object_decl)   // object_decl carries its own optional ','
     ),
     object_decl: $ => seq(
@@ -125,14 +125,14 @@ module.exports = grammar({
       optional(',')
     ),
 
-    condition_section: $ => seq('CONDITION', ':', $.condition),
+    condition_section: $ => seq(choice('CONDITION', 'Condition', 'condition'), ':', $.condition),
 
     // RESTRICTIONS/INFERENCES content: bare-ref statements and IF clauses
     // interleaved [V]. prec.RIGHT: after section content, an IF/statement
     // SHIFTS to continue the section (prec.left would reduce = end the
     // section, breaking restriction-after-IF sequences).
-    restrictions_section: $ => seq('RESTRICTIONS', ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
-    inferences_section: $ => seq('INFERENCES', ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
+    restrictions_section: $ => seq(choice('RESTRICTIONS', 'Restrictions', 'restrictions'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
+    inferences_section: $ => seq(choice('INFERENCES', 'Inferences', 'inferences'), ':', prec.right(repeat1(choice($.restriction_statement, $.if_clause)))),
 
     restriction_statement: $ => choice(
       seq($.bare_ref, '=', $.expression, optional(',')),
@@ -156,19 +156,19 @@ module.exports = grammar({
     // term (AND term)* — multi-line chains; also OR, NOT (case-insensitive)
     condition: $ => prec.left(seq(
       $.condition_term,
-      repeat(seq(choice('AND', 'and', 'OR', 'or'), $.condition_term))
+      repeat(seq(choice('AND', 'And', 'and', 'OR', 'Or', 'or'), $.condition_term))
     )),
 
     // prec(2): condition contexts must win over plain value/expression
     // parses when both could start at the same token (e.g. 'NOT (').
     condition_term: $ => prec(2, choice(
-      seq($.value, choice('SPECIFIED', 'specified')),               // X SPECIFIED (postfix) [V]
-      seq(choice('SPECIFIED', 'specified'), $.value),               // SPECIFIED X (prefix) [V]
-      seq($.value, choice('IN', 'in'), '(', $.in_item, repeat(seq(',', $.in_item)), ')'),  // X IN (...) [V]
+      seq($.value, choice('SPECIFIED', 'Specified', 'specified')),               // X SPECIFIED (postfix) [V]
+      seq(choice('SPECIFIED', 'Specified', 'specified'), $.value),               // SPECIFIED X (prefix) [V]
+      seq($.value, choice('IN', 'In', 'in'), '(', $.in_item, repeat(seq(',', $.in_item)), ')'),  // X IN (...) [V]
       seq($.expression, choice('=', '<>', '<', '>', '<=', '>='), $.expression),            // comparisons (both sides arithmetic) [V]
       seq('(', $.condition, ')'),                      // parenthesized condition: (NOT X SPECIFIED) [V]
-      prec(3, seq(choice('NOT', 'not'), $.condition_term)),         // NOT X
-      prec(3, seq(choice('NOT', 'not'), '(', $.condition, ')')),    // NOT (X AND Y)
+      prec(3, seq(choice('NOT', 'Not', 'not'), $.condition_term)),         // NOT X
+      prec(3, seq(choice('NOT', 'Not', 'not'), '(', $.condition, ')')),    // NOT (X AND Y)
       $.call,                                          // FRAC(...) / PART_OF(a,b) / math builtins [V]
       $.value
     )),
@@ -235,7 +235,7 @@ module.exports = grammar({
     reference: $ => choice($.object_ref, $.bare_ref),
 
     string: $ => seq("'", /[^'\r\n]*/, "'"),
-    number: $ => /\d+(?:\.\d+)?/,
+    number: $ => /-?\d+(?:\.\d+)?/,
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     // Whole-line comment; matches longest against the '*' operator, so a

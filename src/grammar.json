@@ -466,8 +466,21 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "OBJECTS"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "OBJECTS"
+            },
+            {
+              "type": "STRING",
+              "value": "Objects"
+            },
+            {
+              "type": "STRING",
+              "value": "objects"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -565,8 +578,21 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "CONDITION"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "CONDITION"
+            },
+            {
+              "type": "STRING",
+              "value": "Condition"
+            },
+            {
+              "type": "STRING",
+              "value": "condition"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -582,8 +608,21 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "RESTRICTIONS"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "RESTRICTIONS"
+            },
+            {
+              "type": "STRING",
+              "value": "Restrictions"
+            },
+            {
+              "type": "STRING",
+              "value": "restrictions"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -615,8 +654,21 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "INFERENCES"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "INFERENCES"
+            },
+            {
+              "type": "STRING",
+              "value": "Inferences"
+            },
+            {
+              "type": "STRING",
+              "value": "inferences"
+            }
+          ]
         },
         {
           "type": "STRING",
@@ -801,11 +853,19 @@
                     },
                     {
                       "type": "STRING",
+                      "value": "And"
+                    },
+                    {
+                      "type": "STRING",
                       "value": "and"
                     },
                     {
                       "type": "STRING",
                       "value": "OR"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "Or"
                     },
                     {
                       "type": "STRING",
@@ -845,6 +905,10 @@
                   },
                   {
                     "type": "STRING",
+                    "value": "Specified"
+                  },
+                  {
+                    "type": "STRING",
                     "value": "specified"
                   }
                 ]
@@ -860,6 +924,10 @@
                   {
                     "type": "STRING",
                     "value": "SPECIFIED"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "Specified"
                   },
                   {
                     "type": "STRING",
@@ -886,6 +954,10 @@
                   {
                     "type": "STRING",
                     "value": "IN"
+                  },
+                  {
+                    "type": "STRING",
+                    "value": "In"
                   },
                   {
                     "type": "STRING",
@@ -997,6 +1069,10 @@
                     },
                     {
                       "type": "STRING",
+                      "value": "Not"
+                    },
+                    {
+                      "type": "STRING",
                       "value": "not"
                     }
                   ]
@@ -1020,6 +1096,10 @@
                     {
                       "type": "STRING",
                       "value": "NOT"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "Not"
                     },
                     {
                       "type": "STRING",
@@ -1406,7 +1486,7 @@
     },
     "number": {
       "type": "PATTERN",
-      "value": "\\d+(?:\\.\\d+)?"
+      "value": "-?\\d+(?:\\.\\d+)?"
     },
     "identifier": {
       "type": "PATTERN",
