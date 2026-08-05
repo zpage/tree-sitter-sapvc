@@ -116,10 +116,9 @@ module.exports = grammar({
     // ET2 IS_A(300) ETOPARAMETERGROUP where Remark = TXT_NON_STD_REMARK
     objects_section: $ => seq(
       choice('OBJECTS', 'Objects', 'objects'), ':',
-      // object_decl carries its own optional ','; a bare `where` on an
-      // object declaration is followed by THAT object's restriction
-      // statements inline (constraint corpus: `(300)CLS where
-C_V2 = ...;`)
+      // object_decl carries its own optional ','; a bare where on an object
+      // declaration is followed by THAT object's restriction statements
+      // inline inside OBJECTS (constraint corpus: '(300)CLS where' then C_V2 = ...;)
       repeat(choice($.object_decl, $.restriction_statement))
     ),
     object_decl: $ => choice(

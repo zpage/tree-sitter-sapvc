@@ -316,6 +316,10 @@
         {
           "type": "object_decl",
           "named": true
+        },
+        {
+          "type": "restriction_statement",
+          "named": true
         }
       ]
     }

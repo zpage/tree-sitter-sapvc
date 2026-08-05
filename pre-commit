@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Pre-commit gate for grammar changes: if grammar.js / src/ changed, the
+# full-corpus audit must stay clean. Install with:
+#   cp pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+set -euo pipefail
+
+# Only gate when grammar sources changed
+if git diff --cached --name-only | grep -qE '^(grammar\.js|src/|bindings/)'; then
+    echo "grammar files changed — running corpus gate..."
+    bash "$(git rev-parse --show-toplevel)/check_grammar.sh" --skip-lsp
+fi
+exit 0
