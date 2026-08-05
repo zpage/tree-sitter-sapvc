@@ -165,7 +165,12 @@ module.exports = grammar({
       seq($.value, choice('SPECIFIED', 'Specified', 'specified')),               // X SPECIFIED (postfix) [V]
       seq(choice('SPECIFIED', 'Specified', 'specified'), $.value),               // SPECIFIED X (prefix) [V]
       seq($.value, choice('IN', 'In', 'in'), '(', $.in_item, repeat(seq(',', $.in_item)), ')'),  // X IN (...) [V]
-      seq($.expression, choice('=', '<>', '<', '>', '<=', '>='), $.expression),            // comparisons (both sides arithmetic) [V]
+      // comparisons (both sides arithmetic) [V]
+      // RHS allows a unary '-' prefix: `>=-(X-Y)` / `<= -5` (corpus-observed).
+      // Scoped to the RHS position only, so it never forks against binary
+      // '-' chains elsewhere (unlike a global value-level unary minus).
+      seq($.expression, choice('=', '<>', '<', '>', '<=', '>='),
+          prec(3, seq(optional('-'), $.expression))),
       seq('(', $.condition, ')'),                      // parenthesized condition: (NOT X SPECIFIED) [V]
       prec(3, seq(choice('NOT', 'Not', 'not'), $.condition_term)),         // NOT X
       prec(3, seq(choice('NOT', 'Not', 'not'), '(', $.condition, ')')),    // NOT (X AND Y)
