@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
-# Grammar quality gate (manual or CI): generate must be conflict-free, the
-# production corpus must stay clean, and the LSP test suite must pass.
+# Grammar quality gate (manual or CI).
+#
+# Checks:
+#   1. tree-sitter generate produces no conflicts
+#   2. the corpus audit stays at or below the recorded baseline (optional)
+#   3. the LSP test suite passes (optional)
 #
 # Usage:  bash check_grammar.sh [--skip-lsp]
 # Exit 0 = gate passed.
+#
+# Steps 2 and 3 need sibling checkouts (sapvc-lsp) and a local corpus plus
+# corpus_audit.py. When they are absent, those steps skip with a notice.
+# Real production corpora are never committed — bring your own.
 
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -11,7 +19,7 @@ ROOT="$(pwd)"
 TOOLS="$(cd .. && pwd -W 2>/dev/null || cygpath -w "$(cd .. && pwd)")"
 
 echo "== [1/3] tree-sitter generate (conflicts) =="
-export PATH="/c/Users/10586006/Tools/WinLibs/mingw64/bin:$PATH"
+# Requires tree-sitter-cli and a working C toolchain on PATH.
 npx tree-sitter-cli generate > /tmp/gen.log 2>&1 || { cat /tmp/gen.log; exit 1; }
 UNRES=$(grep -c "Unresolved" /tmp/gen.log || true)
 echo "   unresolved: $UNRES"

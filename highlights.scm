@@ -3,7 +3,7 @@
 ; Node names verified against node-types.json of the VALIDATED grammar
 ; (21 production files / 17,988 lines, 2026-08-03).
 
-(comment) @comment
+(comment_statement) @comment
 (string) @string
 (number) @number
 

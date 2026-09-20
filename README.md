@@ -2,8 +2,10 @@
 
 Tree-sitter grammar for the **SAP Variant Configuration (LO-VC / AVC) dependency language**.
 
-Validated against 21 real production dependency files (17,988 lines) — procedures
-(`PRO_*.txt`) and constraints (`CONS_*.txt`) from an elevator product line (2026-08-03).
+Validated against 21 production dependency files (17,988 lines) — procedures
+(`PRO_*.txt`) and constraints (`CONS_*.txt`) from a real elevator product line.
+The corpus is not included: it contains customer configuration data. Bring your
+own dependency files and run `npm run parse <file>`.
 
 ## Usage
 

@@ -137,7 +137,7 @@ module.exports = grammar({
         $.identifier, 'IS_A', '(', $.number, ')', $.identifier,
         optional(seq(choice('where', 'WHERE'), optional(seq($.identifier, '=', $.identifier)))),
         // trailing comma is OPTIONAL: real corpus has both `...,` and bare
-        // line-end after the class name (e.g. NET_CN_ENTA_VILLA.sapvc)
+        // line-end after the class name (e.g. NET_CN_EXAMPLE_PROJECT.sapvc)
         optional(choice(',', ';'))
       ),
       // `(300)CN_ELEV_ENG_M where TM = TYP_TM,` — object declared by class
